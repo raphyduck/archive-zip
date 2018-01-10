@@ -214,7 +214,7 @@ module Archive; class Zip
     #
     # Raises Archive::Zip::EntryError for any other errors related to processing
     # the entry.
-    def self.parse(io)
+    def self.parse(io, check_flags = 1)
       # Parse the central file record and then use the information found there
       # to locate and parse the corresponding local file record.
       cfr = parse_central_file_record(io)
@@ -228,7 +228,7 @@ module Archive; class Zip
       # Check to ensure that the contents of the central file record and the
       # local file record which are supposed to be duplicated are in fact the
       # same.
-      compare_file_records(lfr, cfr)
+      compare_file_records(lfr, cfr, check_flags)
 
       begin
         # Load the correct compression codec.
@@ -433,7 +433,7 @@ module Archive; class Zip
 
     # Compares the local and the central file records found in _lfr_ and _cfr
     # respectively.  Raises Archive::Zip::EntryError if the comparison fails.
-    def self.compare_file_records(lfr, cfr)
+    def self.compare_file_records(lfr, cfr, check_flags = 1)
       # Exclude the extra fields from the comparison since some implementations,
       # such as InfoZip, are known to have differences in the extra fields used
       # in local file records vs. central file records.
@@ -452,7 +452,7 @@ module Archive; class Zip
       if lfr.uncompressed_size != cfr.uncompressed_size then
         raise Zip::EntryError, "`#{cfr.zip_path}': uncompressed size differs between local and central file records"
       end
-      if lfr.general_purpose_flags != cfr.general_purpose_flags then
+      if lfr.general_purpose_flags != cfr.general_purpose_flags && check_flags.to_i > 0 then
         raise Zip::EntryError, "`#{cfr.zip_path}': general purpose flag differs between local and central file records"
       end
       if lfr.compression_method != cfr.compression_method then
