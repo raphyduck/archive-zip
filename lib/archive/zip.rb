@@ -202,12 +202,12 @@ module Archive # :nodoc:
     #
     # Raises Archive::Zip::IOError if called on a non-readable archive or after
     # the archive is closed.
-    def each(check_flags = 1, &b)
+    def each(ignore_check_flags = 0, &b)
       raise IOError, 'non-readable archive' unless readable?
       raise IOError, 'closed archive' if closed?
 
       unless @parse_complete then
-        parse(@archive, check_flags)
+        parse(@archive, ignore_check_flags)
         @parse_complete = true
       end
       @entries.each(&b)
@@ -573,7 +573,7 @@ module Archive # :nodoc:
 
       # First extract all non-directory entries.
       directories = []
-      each(options[:check_flags]) do |entry|
+      each(options[:ignore_check_flags]) do |entry|
         # Compute the target file path.
         file_path = entry.zip_path
         file_path = File.basename(file_path) if options[:flatten]
@@ -656,14 +656,14 @@ module Archive # :nodoc:
     private
 
     # <b>NOTE:</b> For now _io_ MUST be seekable.
-    def parse(io, check_flags = 1)
+    def parse(io, ignore_check_flags = 0)
       socd_pos = find_central_directory(io)
       io.seek(socd_pos)
       # Parse each entry in the central directory.
       loop do
         signature = IOExtensions.read_exactly(io, 4)
         break unless signature == CFH_SIGNATURE
-        @entries << Zip::Entry.parse(io, check_flags)
+        @entries << Zip::Entry.parse(io, ignore_check_flags)
       end
       # Maybe add support for digital signatures and ZIP64 records... Later
 
