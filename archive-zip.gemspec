@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name        = 'archive-zip'
-  s.version     = '0.11.0'
+  s.version     = '0.12.0'
   s.licenses    = ['MIT']
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Jeremy Bopp', 'Akira Matsuda', 'Tatsuya Sato']
-  s.email       = ['jeremy@bopp.net', 'ronnie@dio.jp', 'tatsuya.b.sato@rakuten.com']
+  s.authors     = ['Jeremy Bopp', 'Akira Matsuda', 'Tatsuya Sato', 'Kouhei Sutou']
+  s.email       = ['jeremy@bopp.net', 'ronnie@dio.jp', 'tatsuya.b.sato@rakuten.com', 'kou@clear-code.com']
   s.homepage    = 'http://github.com/javanthropus/archive-zip'
   s.summary     = 'Simple, extensible, pure Ruby ZIP archive support.'
   s.description = <<-EOD
@@ -15,7 +15,6 @@ updating ZIP archives.  This implementation is 100% Ruby and loosely modeled on
 the archive creation and extraction capabilities of InfoZip's zip and unzip
 tools.
   EOD
-  s.rubyforge_project = 'archive-zip'
 
   s.add_dependency('io-like', '~> 0.3.0')
 
